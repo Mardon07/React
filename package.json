@@ -2,13 +2,12 @@
   "name": "class-component",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "format:fix": "Prettier --write",
+    "format:fix": "prettier . --write",
     "prepare": "husky"
   },
   "dependencies": {
