@@ -1,3 +1,3 @@
-function checkcH u sk y() {}
+function chec k cH u sk y() {}
 
 export default checkHusky;
