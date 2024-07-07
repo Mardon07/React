@@ -15,6 +15,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react-compiler/react-compiler': 'error',
-    'no-explicit-any': 'off',
+    'no-explicit-any': 'error',
   },
 };
