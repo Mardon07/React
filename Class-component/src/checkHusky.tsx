@@ -1,4 +1,4 @@
-function checkHu sky(){
+function chec kHu sky(){
 
 }
 
