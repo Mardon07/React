@@ -32,7 +32,7 @@
   },
   "lint-staged": {
     "*.js, *.ts, *.tsx": [
-      "npm run lint:fix"
+      "eslint --fix"
     ]
   }
 }
