@@ -1,4 +1,4 @@
-import { Component, ChangeEvent } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 interface SearchComponentResult {
   name: string;
   gender: string;
@@ -13,29 +13,26 @@ interface SearchComponentState {
   isLoading: boolean;
 }
 
-class SearchComponent extends Component<object, SearchComponentState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      searchTerm: '',
-      searchResults: [],
-      error: null,
-      isLoading: false,
-    };
-  }
+function SearchComponent() {
+  const [state, setState] = useState<SearchComponentState>({
+    searchTerm: '',
+    searchResults: [],
+    error: null,
+    isLoading: false,
+  });
 
-  componentDidMount() {
+  useEffect(() => {
     const savedQuery = localStorage.getItem('searchQuery');
     if (savedQuery) {
-      this.setState({ searchTerm: savedQuery });
-      this.performAPICall(savedQuery);
+      setState((prevState) => ({ ...prevState, searchTerm: savedQuery }));
+      performAPICall(savedQuery);
     } else {
-      this.performAPICall('');
+      performAPICall('');
     }
-  }
+  }, []);
 
-  performAPICall = async (searchTerm: string) => {
-    this.setState({ isLoading: true });
+  const performAPICall = async (searchTerm: string) => {
+    setState((prevState) => ({ ...prevState, setIsLoading: true }));
     try {
       let url = 'https://swapi.dev/api/people/';
       if (searchTerm !== '') {
@@ -48,48 +45,57 @@ class SearchComponent extends Component<object, SearchComponentState> {
       }
 
       const data = await response.json();
-      this.setState({ searchResults: data.results, error: null });
+      setState((prevState) => ({
+        ...prevState,
+        searchResults: data.results,
+        error: null,
+      }));
     } catch (error) {
-      this.setState({ error: 'An error occurred', searchResults: [] });
+      setState((prevState) => ({
+        ...prevState,
+        error: 'An error occurred',
+        searchResults: [],
+      }));
     } finally {
-      this.setState({ isLoading: false });
+      setState((prevState) => ({ ...prevState, isLoading: false }));
     }
   };
 
-  handleSearch = () => {
-    const { searchTerm } = this.state;
-    this.performAPICall(searchTerm.trim());
+  const handleSearch = () => {
+    const { searchTerm } = state;
+    performAPICall(searchTerm.trim());
     localStorage.setItem('searchQuery', searchTerm);
   };
 
-  throwError = () => {
-    this.setState({ error: 'Error has occurred!' });
+  const throwError = () => {
+    setState((prevState) => ({ ...prevState, error: 'Error has occurred!' }));
   };
 
-  render() {
-    const { searchTerm, searchResults, error, isLoading } = this.state;
-
-    return (
-      <div className="search-app">
-        <div className="search-bar">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              this.setState({ searchTerm: e.target.value })
-            }
-          />
-          <button onClick={this.handleSearch}>Search</button>
-          <button onClick={this.throwError}>Throw Error</button>
-        </div>
-        <div className="search-results">
-          {isLoading ? (
-            <div className="loader"></div>
-          ) : error ? (
-            <div>Error: {error}</div>
-          ) : (
-            <ul>
-              {searchResults.map((result: SearchComponentResult, index: number) => (
+  return (
+    <div className="search-app">
+      <div className="search-bar">
+        <input
+          type="text"
+          value={state.searchTerm}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setState((prevState) => ({
+              ...prevState,
+              searchTerm: e.target.value,
+            }))
+          }
+        />
+        <button onClick={handleSearch}>Search</button>
+        <button onClick={throwError}>Throw Error</button>
+      </div>
+      <div className="search-results">
+        {state.isLoading ? (
+          <div className="loader"></div>
+        ) : state.error ? (
+          <div>Error: {state.error}</div>
+        ) : (
+          <ul>
+            {state.searchResults.map(
+              (result: SearchComponentResult, index: number) => (
                 <li key={index} className="search-result">
                   <div>
                     <strong>{result.name}</strong>
@@ -98,13 +104,13 @@ class SearchComponent extends Component<object, SearchComponentState> {
                   <div>Height: {result.height}</div>
                   <div>Skin Color: {result.skin_color}</div>
                 </li>
-              ))}
-            </ul>
-          )}
-        </div>
+              ),
+            )}
+          </ul>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default SearchComponent;
