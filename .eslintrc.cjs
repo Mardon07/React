@@ -15,6 +15,8 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react-compiler/react-compiler': 'error',
-    'no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+    'react-compiler/react-compiler': 'off',
   },
 };
