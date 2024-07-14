@@ -1,10 +1,12 @@
 import React from 'react';
 import { AbilityInfo, PokemonDetail, TypeInfo } from '../SearchCard/SearchCard';
+import { SearchComponentState } from '../SearchComponent/SearchComponent';
 import styles from './PokemonInfo.module.css';
 
 interface PokemonInfoProps {
-  pokemon: PokemonDetail;
+  pokemon: PokemonDetail | null;
   onClose: () => void;
+  state: SearchComponentState;
 }
 
 const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon, onClose }) => {

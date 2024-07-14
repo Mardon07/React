@@ -1,4 +1,5 @@
 import { ChangeEvent, useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   fetchPokemonDetails,
   performAPICall,
@@ -8,6 +9,7 @@ import Pagination from '../Pagination/Pagination';
 import PokemonInfo from '../PokemonInfo/PokemonInfo';
 import { PokemonDetail } from '../SearchCard/SearchCard';
 import SearchResults from '../SearchResults/SearchResults';
+import styles from './SearchComponent.module.css';
 
 export interface SearchComponentState {
   searchTerm: string;
@@ -28,6 +30,9 @@ export interface PakemonItem {
 }
 
 function SearchComponent() {
+  const param = useParams<{ pageId: string }>();
+  const navigate = useNavigate();
+
   const [state, setState] = useState<SearchComponentState>({
     searchTerm: '',
     searchResults: [],
@@ -42,20 +47,31 @@ function SearchComponent() {
   });
 
   const [pokemonDetails, setPokemonDetails] = useState<PokemonDetail[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(param.pageId) || 1,
+  );
   const [selectedPokemon, setSelectedPokemon] = useState(null);
   const itemsPerPage = 20;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     performAPICall(setState, page);
+    navigate(`/page/${page}`);
   };
+  useEffect(() => {
+    const pageNumber = Number(param.pageId);
+    if (pageNumber) {
+      if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > 65) {
+        navigate('/404');
+      }
+    }
+  }, [param.pageId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const savedQuery = localStorage.getItem('searchQuery');
     if (savedQuery) {
       setState((prevState) => ({ ...prevState, searchTerm: savedQuery }));
-      performAPICall(setState, currentPage);
+      searchPokemon(savedQuery.trim().toLowerCase(), setPokemonDetails);
     } else {
       performAPICall(setState, currentPage);
     }
@@ -70,7 +86,7 @@ function SearchComponent() {
   const handleSearch = () => {
     const { searchTerm } = state;
     if (searchTerm) {
-      searchPokemon(searchTerm, setPokemonDetails);
+      searchPokemon(searchTerm.trim().toLowerCase(), setPokemonDetails);
     } else {
       performAPICall(setState, currentPage);
     }
@@ -97,8 +113,8 @@ function SearchComponent() {
   };
 
   return (
-    <div className="search-app">
-      <div className="search-bar">
+    <div className={styles.searchApp}>
+      <div className={styles.searchBar}>
         <input
           type="text"
           value={state.searchTerm}
@@ -118,14 +134,18 @@ function SearchComponent() {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
-      <div className="content" onClick={handleCloseDetails}>
+      <div className={styles.content} onClick={handleCloseDetails}>
         <SearchResults
           pokemonDetails={pokemonDetails}
           state={state}
           onShowDetails={handleShowDetails}
         />
         {selectedPokemon && (
-          <PokemonInfo pokemon={selectedPokemon} onClose={handleCloseDetails} />
+          <PokemonInfo
+            state={state}
+            pokemon={selectedPokemon}
+            onClose={handleCloseDetails}
+          />
         )}
       </div>
     </div>
