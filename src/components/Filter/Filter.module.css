@@ -1,0 +1,35 @@
+/* Filter.module.css */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff; /* Белый фон */
+}
+
+.select {
+  padding: 10px;
+  width: 200px;
+  border: 2px solid #008000; /* Зелёная рамка */
+  border-radius: 5px;
+  background-color: #ffffff; /* Белый фон */
+  color: #000080; /* Тёмно-синий текст */
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select:hover {
+  border-color: #000080; /* Синяя рамка при наведении */
+}
+
+.option {
+  background-color: #ffffff; /* Белый фон для опций */
+  color: #000080; /* Тёмно-синий текст для опций */
+}
+
+.select:focus {
+  outline: none;
+  box-shadow: 0 0 5px #008000; /* Зелёная подсветка при фокусе */
+}

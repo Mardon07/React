@@ -12,7 +12,7 @@ export interface PokemonDetail {
   height: string;
   weight: string;
   base_experience: string;
-  types: [];
+  types: TypeInfo[];
   abilities: [];
   stats: BaseStats[];
 }
@@ -23,6 +23,10 @@ export interface TypeInfo {
   type: {
     name: string;
   };
+}
+export interface PokemonTypeInfo {
+  name: string
+  url: string
 }
 export interface AbilityInfo {
   ability: {
@@ -48,6 +52,10 @@ function SearchCard({
             <div>
               <strong>{result.name}</strong>
             </div>
+            <div>
+                Type: {result.types.map((type) => type.type.name).join(', ')}
+              </div>
+
             <div>
               {' '}
               <img src={result.sprites.front_default} alt="foto" />

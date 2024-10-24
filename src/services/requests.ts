@@ -3,8 +3,10 @@ import { Dispatch } from 'react';
 import { PokemonDetail } from '../components/SearchCard/SearchCard';
 import {
   PakemonData,
+  PakemonDataType,
   SearchComponentState,
 } from '../components/SearchComponent/SearchComponent';
+import { FilteredPokemonResponse } from '../components/Filter/Filter';
 
 export const performAPICall = async (
   setState: Dispatch<React.SetStateAction<SearchComponentState>>,
@@ -70,5 +72,49 @@ export const searchPokemon = async (
     setState([data]);
   } catch (error) {
     setState([]);
+  }
+};
+
+export const getPokemonType = async () => {
+  try {
+    const url = `https://pokeapi.co/api/v2/type/?limit=40`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data: PakemonDataType = await response.json();
+    return data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchPokemonByType = async (
+  type: string,
+  setState: Dispatch<React.SetStateAction<SearchComponentState>>,
+) => {
+  try {
+    const url = `https://pokeapi.co/api/v2/type/${type}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    const data: FilteredPokemonResponse = await response.json();
+
+    const result =  data.pokemon.map(pokemon=> ({name: pokemon.pokemon.name, url: pokemon.pokemon.url}))
+
+    setState((prevState) => ({
+      ...prevState,
+      searchResults: result,
+      error: null,
+    }));
+  } catch (error) {
+    console.log(error);
+    
+    setState((prevState) => ({
+      ...prevState,
+      error: 'An error occurred',
+      searchResults: [],
+    }));
   }
 };

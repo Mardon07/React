@@ -7,9 +7,10 @@ import {
 } from '../../services/requests';
 import Pagination from '../Pagination/Pagination';
 import PokemonInfo from '../PokemonInfo/PokemonInfo';
-import { PokemonDetail } from '../SearchCard/SearchCard';
+import { PokemonDetail, PokemonTypeInfo } from '../SearchCard/SearchCard';
 import SearchResults from '../SearchResults/SearchResults';
 import styles from './SearchComponent.module.css';
+import FilterComponent from '../Filter/Filter';
 
 export interface SearchComponentState {
   searchTerm: string;
@@ -23,6 +24,12 @@ export interface PakemonData {
   next: null | string;
   previous: null | string;
   results: PakemonItem[];
+}
+export interface PakemonDataType {
+  count: number;
+  next: null | string;
+  previous: null | string;
+  results: PokemonTypeInfo[];
 }
 export interface PakemonItem {
   name: string;
@@ -134,6 +141,7 @@ function SearchComponent() {
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />
+      <FilterComponent setState={setState}/>
       <div className={styles.content} onClick={handleCloseDetails}>
         <SearchResults
           pokemonDetails={pokemonDetails}
