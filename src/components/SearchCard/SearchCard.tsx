@@ -1,3 +1,5 @@
+import { useAppSelector } from '../../store/hooks';
+import { RootState } from '../../store/store';
 import styles from './SearchCard.module.css';
 
 export interface PokemonDetail {
@@ -25,8 +27,8 @@ export interface TypeInfo {
   };
 }
 export interface PokemonTypeInfo {
-  name: string
-  url: string
+  name: string;
+  url: string;
 }
 export interface AbilityInfo {
   ability: {
@@ -34,16 +36,17 @@ export interface AbilityInfo {
   };
 }
 function SearchCard({
-  pokemonDetails,
   onShowDetails,
 }: {
-  pokemonDetails: PokemonDetail[];
   onShowDetails: (pokemon: string) => void;
 }) {
+  const {
+    pokemonDetails
+  } = useAppSelector((state: RootState) => state.pokemon);
   return (
     <>
       <div className={styles.searchResults}>
-        {pokemonDetails.map((result: PokemonDetail, index: number) => (
+        {Array.isArray(pokemonDetails) && pokemonDetails.map((result: PokemonDetail, index: number) => (
           <div
             className={styles.card}
             key={index}
@@ -53,8 +56,8 @@ function SearchCard({
               <strong>{result.name}</strong>
             </div>
             <div>
-                Type: {result.types.map((type) => type.type.name).join(', ')}
-              </div>
+              Type: {result.types.map((type) => type.type.name).join(', ')}
+            </div>
 
             <div>
               {' '}

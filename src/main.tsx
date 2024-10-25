@@ -4,6 +4,8 @@ import App from './App';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import NotFound from './components/NotFound/NotFoundComponent';
 import SearchComponent from './components/SearchComponent/SearchComponent';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 import './index.css';
 
 const router = createBrowserRouter([
@@ -39,6 +41,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <ErrorBoundary>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </ErrorBoundary>,
 );

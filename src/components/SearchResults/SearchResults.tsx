@@ -1,28 +1,25 @@
-import SearchCard, { PokemonDetail } from '../SearchCard/SearchCard';
-import { SearchComponentState } from '../SearchComponent/SearchComponent';
+import { useAppSelector } from '../../store/hooks';
+import { RootState } from '../../store/store';
+import SearchCard from '../SearchCard/SearchCard';
 import './SearchResults.model.css';
 
 function SearchResults({
-  state,
-  pokemonDetails,
   onShowDetails,
 }: {
-  state: SearchComponentState;
-  pokemonDetails: PokemonDetail[];
   onShowDetails: (pokemon: string) => void;
 }) {
+  const { isLoading, error } = useAppSelector(
+    (state: RootState) => state.pokemon,
+  );
   return (
     <div className="search-results ">
-      {state.isLoading ? (
+      {isLoading ? (
         <div className="loader"></div>
-      ) : state.error ? (
-        <div>Error: {state.error}</div>
+      ) : error ? (
+        <div>Error: {error}</div>
       ) : (
         <ul>
-          <SearchCard
-            onShowDetails={onShowDetails}
-            pokemonDetails={pokemonDetails}
-          />
+          <SearchCard onShowDetails={onShowDetails}/>
         </ul>
       )}
     </div>

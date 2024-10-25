@@ -1,16 +1,16 @@
 import React from 'react';
-import { AbilityInfo, PokemonDetail, TypeInfo } from '../SearchCard/SearchCard';
-import { SearchComponentState } from '../SearchComponent/SearchComponent';
+import { AbilityInfo,  TypeInfo } from '../SearchCard/SearchCard';
 import styles from './PokemonInfo.module.css';
+import { useAppSelector } from '../../store/hooks';
+import { RootState } from '../../store/store';
 
 interface PokemonInfoProps {
-  pokemon: PokemonDetail | null;
   onClose: () => void;
-  state: SearchComponentState;
 }
 
-const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon, onClose }) => {
-  if (!pokemon) return null;
+const PokemonInfo: React.FC<PokemonInfoProps> = ({  onClose }) => {
+  const {  selectedPokemon } = useAppSelector((state: RootState) => state.pokemon);
+  if (!selectedPokemon) return null;
 
   return (
     <div className={styles.pokemonInfo}>
@@ -18,35 +18,35 @@ const PokemonInfo: React.FC<PokemonInfoProps> = ({ pokemon, onClose }) => {
         ×
       </button>
       <div>
-        <img src={pokemon.sprites.front_default} alt="front_default" />
-        <img src={pokemon.sprites.front_shiny} alt="front_default" />
-        <img src={pokemon.sprites.back_default} alt="front_default" />
-        <img src={pokemon.sprites.back_shiny} alt="front_default" />
+        <img src={selectedPokemon.sprites.front_default} alt="front_default" />
+        <img src={selectedPokemon.sprites.front_shiny} alt="front_default" />
+        <img src={selectedPokemon.sprites.back_default} alt="front_default" />
+        <img src={selectedPokemon.sprites.back_shiny} alt="front_default" />
       </div>
-      <h2>{pokemon.name}</h2>
+      <h2>{selectedPokemon.name}</h2>
       <ul>
-        <li>ID: {pokemon.id}</li>
-        <li>Height: {pokemon.height}</li>
-        <li>Weight: {pokemon.weight}</li>
-        <li>Base Experience: {pokemon.base_experience}</li>
+        <li>ID: {selectedPokemon.id}</li>
+        <li>Height: {selectedPokemon.height}</li>
+        <li>Weight: {selectedPokemon.weight}</li>
+        <li>Base Experience: {selectedPokemon.base_experience}</li>
         <li>
           Type:{' '}
-          {pokemon.types
+          {selectedPokemon.types
             .map((typeInfo: TypeInfo) => typeInfo.type.name)
             .join(', ')}
         </li>
         <li>
           Abilities:{' '}
-          {pokemon.abilities
+          {selectedPokemon.abilities
             .map((abilityInfo: AbilityInfo) => abilityInfo.ability.name)
             .join(', ')}
         </li>
-        <li>HP: {pokemon.stats[0].base_stat}</li>
-        <li>Attack: {pokemon.stats[1].base_stat}</li>
-        <li>Defense: {pokemon.stats[2].base_stat}</li>
-        <li>Special Attack: {pokemon.stats[3].base_stat}</li>
-        <li>Special Defense: {pokemon.stats[4].base_stat}</li>
-        <li>Speed: {pokemon.stats[5].base_stat}</li>
+        <li>HP: {selectedPokemon.stats[0].base_stat}</li>
+        <li>Attack: {selectedPokemon.stats[1].base_stat}</li>
+        <li>Defense: {selectedPokemon.stats[2].base_stat}</li>
+        <li>Special Attack: {selectedPokemon.stats[3].base_stat}</li>
+        <li>Special Defense: {selectedPokemon.stats[4].base_stat}</li>
+        <li>Speed: {selectedPokemon.stats[5].base_stat}</li>
       </ul>
     </div>
   );

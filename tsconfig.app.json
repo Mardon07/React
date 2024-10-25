@@ -10,7 +10,7 @@
 
     /* Bundler mode */
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "moduleDetection": "force",
