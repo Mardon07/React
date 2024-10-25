@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { pokemonApi } from '../services/pokemon'; // Импортируем ваш RTK Query API
+import { pokemonApi } from '../services/pokemon';
 import { PokemonDetail } from '../../components/SearchCard/SearchCard';
 import { PakemonItem } from '../../types/search';
 import axios from 'axios';
@@ -15,6 +15,7 @@ export interface SearchState {
   currentPage: number;
   types: PakemonItem[]
   selectedType: string
+  favorites: PokemonDetail[];
 }
 
 const initialState: SearchState = {
@@ -27,7 +28,8 @@ const initialState: SearchState = {
   totalCount: 0,
   currentPage: 1,
   types: [],
-  selectedType : ''
+  selectedType : '',
+  favorites: []
 
 };
 
@@ -71,7 +73,15 @@ const pokemonSlice = createSlice({
     },
     setSelectedType: (state, action: PayloadAction<string>)=>{
         state.selectedType = action.payload
-    }
+    },
+    toggleFavorite: (state, action: PayloadAction<PokemonDetail>) => {
+        const isFavorite = state.favorites.some((fav) => fav.name === action.payload.name);
+        if (isFavorite) {
+          state.favorites = state.favorites.filter((fav) => fav.name !== action.payload.name);
+        } else {
+          state.favorites.push(action.payload);
+        }
+      },
   },
   extraReducers: (builder) => {
     builder
@@ -145,7 +155,8 @@ export const {
   removeSelectedPokemon,
   setPage,
   setSearchResults,
-  setSelectedType
+  setSelectedType,
+  toggleFavorite
 } = pokemonSlice.actions;
 
 export default pokemonSlice.reducer;

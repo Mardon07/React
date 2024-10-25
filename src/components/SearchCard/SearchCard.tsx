@@ -1,4 +1,5 @@
-import { useAppSelector } from '../../store/hooks';
+import { toggleFavorite } from '../../store/features/pokemonSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
 import styles from './SearchCard.module.css';
 
@@ -40,9 +41,11 @@ function SearchCard({
 }: {
   onShowDetails: (pokemon: string) => void;
 }) {
+  const dispatch = useAppDispatch();
   const {
     pokemonDetails
   } = useAppSelector((state: RootState) => state.pokemon);
+  const favorites = useAppSelector((state: RootState) => state.pokemon.favorites);
   return (
     <>
       <div className={styles.searchResults}>
@@ -52,18 +55,24 @@ function SearchCard({
             key={index}
             style={{ listStyleType: 'none' }}
           >
+            <div className={styles.favoriteButtonContainer}>
+              <button 
+                className={styles.favoriteButton} 
+                onClick={() => dispatch(toggleFavorite(result))}
+              >
+                {favorites.some((fav) => fav.name === result.name) ? '❤️' : '🤍'}
+              </button>
+            </div>
             <div>
               <strong>{result.name}</strong>
             </div>
             <div>
               Type: {result.types.map((type) => type.type.name).join(', ')}
             </div>
-
             <div>
-              {' '}
               <img src={result.sprites.front_default} alt="foto" />
             </div>
-            <button onClick={async () => onShowDetails(result.name)}>
+            <button className={styles.more} onClick={async () => onShowDetails(result.name)}>
               more...
             </button>
           </div>
