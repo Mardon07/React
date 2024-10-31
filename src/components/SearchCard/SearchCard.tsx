@@ -70,7 +70,7 @@ function SearchCard({
               Type: {result.types.map((type) => type.type.name).join(', ')}
             </div>
             <div>
-              <img src={result.sprites.front_default} alt="foto" />
+              <img loading='lazy' src={result.sprites.front_default} alt="foto" />
             </div>
             <button className={styles.more} onClick={async () => onShowDetails(result.name)}>
               more...
